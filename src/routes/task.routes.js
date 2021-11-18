@@ -21,6 +21,14 @@ rutas.post('/', async (req, res)  => {
     res.json({status: 'Pedido guardado:)'});
 
 });
+//para eliminar pedidos
+rutas.delete('/:id', async (req, res) => {
+    await Pedidos.findByIdAndRemove(req.params.id);
+    res.json({status: 'Pedido Eliminado:('}); 
+ });
+
+
+
 
 
 module.exports = rutas;
