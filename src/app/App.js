@@ -39,6 +39,7 @@ class App extends Component {
                     console.log(data)
                     M.toast({html: 'Pedido guardado:D'});
                     this.setState({title: '', description: ''});
+                    this.mostrarPedidos();
                 })
                 .catch(err => console.error(err));
 
@@ -52,6 +53,22 @@ class App extends Component {
             [name]: value
         });
     }
+
+    deletePedido(id){
+        fetch(`/api/tasks/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type' : 'application/json'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+            this.mostrarPedidos();
+        });
+    }
+
 
     render(){
         return(
@@ -84,14 +101,14 @@ class App extends Component {
                                                     className="materialize-textarea"></textarea>
                                                 </div>
                                             </div>
-                                            <button className="btn red darken-4" type="submit" >Enviar
+                                            <button className="btn green lighten-1" type="submit" >Enviar
                                             <i className="material-icons right">send</i></button>
                                         </form>
                                 </div>
                             </div>
                         </div>
                         
-                        <div className="Cols s8">
+                        <div className="Cols s7">
                             <table>
                                 <thead>
                                     <tr>
@@ -103,16 +120,20 @@ class App extends Component {
                                 {
                                     this.state.pedidos.map(pedidos => {
                                         return (
-                                            <tr>
+                                            <tr key={pedidos._id}>
                                                 <td>{pedidos.title}</td>
                                                 <td>{pedidos.description}</td>
+                                                <td>
+                                                    <button  className="btn teal lighten-3"><i className="material-icons">edit</i></button>
+                                                    
+                                                    <button onClick={()=> this.deletePedido(pedidos._id)} className=" btn red darken-1" style={{margin: '10px'}}><i className="material-icons">delete</i></button>
+                                                </td>
                                             </tr>
                                         )
                                     })
                                 }
                             </tbody>
-                            </table>
-                           
+                            </table>  
                         </div>
                     </div>
                 </div>
