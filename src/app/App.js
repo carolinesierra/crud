@@ -6,10 +6,23 @@ class App extends Component {
         super();
         this.state = {
             title: '',
-            description: ''
+            description: '',
+            pedidos: []
         };
         this.handleChange = this.handleChange.bind(this);
         this.addPedido = this.addPedido.bind(this);
+    }
+
+    componentDidMount(){
+        this.mostrarPedidos();
+    }
+
+    mostrarPedidos(){
+        fetch('/api/tasks')
+        .then(res => res.json())
+        .then(data => {
+            this.setState({pedidos: data});
+            console.log(this.state.pedidos)});
     }
 
     addPedido(e){
@@ -52,12 +65,12 @@ class App extends Component {
                     </div>
                 </nav>
 
-                <div className="container">
-                    <div className="row">
+                <div className="container ">
+                    <div className="row ">
                         {/*formulario para agregar pedidos*/}
-                        <div className="col s5">
-                            <div className="card">
-                                <div className="card-content">
+                        <div className="col s12 center-align">
+                            <div className="card center">
+                                <div className="card-content container center-align ">
                                      {/*encargado de enviar los datos al server*/}
                                      <form onSubmit={this.addPedido}>
                                             <div className="row">
@@ -67,7 +80,7 @@ class App extends Component {
                                             </div>
                                             <div className="row">
                                                 <div className="input-field col s12">
-                                                    <textarea name="description"  value={this.state.description} onChange={this.handleChange} placeholder="Descripción del pedido" 
+                                                    <textarea name="description"  value={this.state.description} onChange={this.handleChange} placeholder="Detalles del pedido" 
                                                     className="materialize-textarea"></textarea>
                                                 </div>
                                             </div>
@@ -78,11 +91,28 @@ class App extends Component {
                             </div>
                         </div>
                         
-                        <div className="Cols s5">
-
-
-
-
+                        <div className="Cols s8">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Nombre de pedido</th>
+                                        <th>Detalles del pedido</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {
+                                    this.state.pedidos.map(pedidos => {
+                                        return (
+                                            <tr>
+                                                <td>{pedidos.title}</td>
+                                                <td>{pedidos.description}</td>
+                                            </tr>
+                                        )
+                                    })
+                                }
+                            </tbody>
+                            </table>
+                           
                         </div>
                     </div>
                 </div>
