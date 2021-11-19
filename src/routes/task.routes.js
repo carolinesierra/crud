@@ -30,19 +30,13 @@ rutas.delete('/:id', async (req, res) => {
 
 
 //para modificar/actualizar pedidos
-rutas.put('/:id', async (req, res) => {
-    const { title, description } = req.body;
-    const pedidoNuevo = Object.assign({ title, description});
-    await Pedidos.findByIdAndUpdate(req.params.id, pedidoNuevo);
-    res.json({status: 'Pedido Actualizado'});
+rutas.put('/:id', async (req,res) => {
+    const { title , description } = req.body;  
+    
+    const pedidoNuevo = {title, description};
+    await Pedidos.findOneAndUpdate({_id:req.params.id}, pedidoNuevo);
+    console.log(`${req.params.id} ${pedidoNuevo.title}`);
+    res.json({status: 'actualizado'});
+    
 });
-
-
-//para obtener una unico pedido
-rutas.get('/:id', async (req, res) => {
-    const pedido = await Pedidos.findById(req.params.id);
-    res.json(pedido);
-});
-
-
 module.exports = rutas;

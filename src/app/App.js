@@ -7,7 +7,8 @@ class App extends Component {
         this.state = {
             title: '',
             description: '',
-            pedidos: []
+            pedidos: [],
+            _id: ''
         };
         this.handleChange = this.handleChange.bind(this);
         this.addPedido = this.addPedido.bind(this);
@@ -26,10 +27,27 @@ class App extends Component {
     }
 
     addPedido(e){
-        fetch('/api/tasks',{
+           if(this.state._id) {
+               fetch(`/api/tasks/${this.state._id}`, {
+                   method:'PUT',
+                   body: JSON.stringify(this.state),
+                   headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                   }
+               })
+               .then(res => res.json())
+               .then(data => {
+                   console.log(data);
+                  this.setState({ title:'', description:''});
+               });
+               this.mostrarPedidos();
+           } else {
+
+            fetch('/api/tasks',{
                 method:'POST',
                 body: JSON.stringify(this.state),
-                headers:{
+                headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 }
@@ -42,7 +60,7 @@ class App extends Component {
                     this.mostrarPedidos();
                 })
                 .catch(err => console.error(err));
-
+           }
         e.preventDefault();
     }
    
@@ -69,6 +87,19 @@ class App extends Component {
         });
     }
 
+
+    editPedido(id){
+        fetch(`/api/task/${id}`)
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                this.setState({
+                    title: data.title,
+                    description: data.description,
+                    _id: data._id
+            })
+        });
+    }
 
     render(){
         return(
@@ -101,7 +132,7 @@ class App extends Component {
                                                     className="materialize-textarea"></textarea>
                                                 </div>
                                             </div>
-                                            <button className="btn green lighten-1" type="submit" >Enviar
+                                            <button className="btn green lighten-1" type="submit" >Guardar
                                             <i className="material-icons right">send</i></button>
                                         </form>
                                 </div>
@@ -118,15 +149,15 @@ class App extends Component {
                                 </thead>
                                 <tbody>
                                 {
-                                    this.state.pedidos.map(pedidos => {
+                                    this.state.pedidos.map(pedido => {
                                         return (
-                                            <tr key={pedidos._id}>
-                                                <td>{pedidos.title}</td>
-                                                <td>{pedidos.description}</td>
+                                            <tr key={pedido._id}>
+                                                <td>{pedido.title}</td>
+                                                <td>{pedido.description}</td>
                                                 <td>
-                                                    <button  className="btn teal lighten-3"><i className="material-icons">edit</i></button>
-                                                    
-                                                    <button onClick={()=> this.deletePedido(pedidos._id)} className=" btn red darken-1" style={{margin: '10px'}}><i className="material-icons">delete</i></button>
+                                                    <button onClick={()=> this.editPedido(pedido._id)} className="btn teal lighten-3"><i className="material-icons">edit</i></button>
+                        
+                                                    <button onClick={()=> this.deletePedido(pedido._id)} className=" btn red darken-1" style={{margin: '10px'}}><i className="material-icons">delete</i></button>
                                                 </td>
                                             </tr>
                                         )
