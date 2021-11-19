@@ -7,7 +7,7 @@ const app = express();
 
 
 //configuraciones
-app.set('port', process.env.PORT || 4000); //de no existir el puerto del sistema, tomara el puerto 4000
+app.set('port', process.env.PORT || 5000); //de no existir el puerto del sistema, tomara el puerto 4000
 
 
 //middlewares
