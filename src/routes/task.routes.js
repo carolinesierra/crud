@@ -10,6 +10,13 @@ rutas.get('/', async (req, res) => {
     res.json(pedidos);
 });
 
+
+rutas.get('/:id', async (req, res) => {
+    const pedidos = await Pedidos.findById(req.params.id);
+    res.json(pedidos);
+});
+
+
 //para guardar y listar pedidos
 rutas.post('/', async (req, res)  => {
     const { title, description } = req.body;

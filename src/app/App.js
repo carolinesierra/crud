@@ -89,7 +89,7 @@ class App extends Component {
 
 
     editPedido(id){
-        fetch(`/api/task/${id}`)
+        fetch(`/api/tasks/${id}`)
             .then(res => res.json())
             .then(data => {
                 console.log(data);
